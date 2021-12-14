@@ -17,6 +17,7 @@ func GetAllEmployesByCompanyCode(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	
 	return c.SendStatus(id)
 }
 

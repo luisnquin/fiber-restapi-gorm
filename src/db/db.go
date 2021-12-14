@@ -9,7 +9,6 @@ import (
 	"github.com/luisnquin/fiber-restapi-gorm/models"
 )
 
-
 var DB *gorm.DB
 var err error
 
@@ -20,7 +19,7 @@ func Init() *gorm.DB {
 		panic(err)
 	}
 
-	DB.DropTableIfExists(&models.Company{}, &models.Employee{})
+	// DB.DropTableIfExists(&models.Company{}, &models.Employee{})
 	DB.AutoMigrate(&models.Company{}, &models.Employee{})
 
 	return DB
