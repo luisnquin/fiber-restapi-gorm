@@ -86,7 +86,7 @@ func ModifyOneEmployee(c *fiber.Ctx) error {
 	}
 
 	request := models.Employee{}
-	err = c.JSONP(&request)
+	err = c.BodyParser(&request)
 	if err != nil {
 		c.SendStatus(fiber.StatusBadRequest)
 	}
@@ -124,36 +124,33 @@ func UpdateOneEmployee(c *fiber.Ctx) error {
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
+	
+	request := models.Employee{}
+	err = c.BodyParser(&request)
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
 
 	employee := models.Employee{}
 	err = conn.DB.Where("id = ?", id).Find(&employee).Error
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
-
-	request := models.Employee{}
-	err = c.JSONP(&request)
-	if err != nil {
-		return c.SendStatus(fiber.StatusBadRequest)
-	}
-
+	
 	if request.Fullname != "" {
 		employee.Fullname = request.Fullname
-		return c.SendStatus(fiber.StatusAccepted)
 	}
 	if request.Age != 0 {
 		employee.Age = request.Age
-		return c.SendStatus(fiber.StatusAccepted)
 	}
 	if request.Position != "" {
 		employee.Position = request.Position
-		return c.SendStatus(fiber.StatusAccepted)
 	}
 	if request.CompanyCode != 0 {
 		employee.CompanyCode = request.CompanyCode
-		return c.SendStatus(fiber.StatusAccepted)
 	}
-	return c.SendStatus(fiber.StatusNotModified)
+	conn.DB.Save(&employee)
+	return c.SendStatus(fiber.StatusAccepted)
 }
 
 func RemoveOneEmployee(c *fiber.Ctx) error {
