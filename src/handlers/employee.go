@@ -22,6 +22,8 @@ func GetAllEmployees(c *fiber.Ctx) error {
 }
 
 func GetAnyEmployee(c *fiber.Ctx) error {
+	c.Set("Content-Type", "application/json")
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
@@ -36,14 +38,15 @@ func GetAnyEmployee(c *fiber.Ctx) error {
 }
 
 func GetAllEmployeesByCompanyCode(c *fiber.Ctx) error {
+	c.Set("Content-Type", "application/json")
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
-	uid := uint(id)
 
 	company_employees := []models.EmployeesAndCompany{}
-	err = conn.DB.Raw("SELECT employees.fullname, employees.age, employees.position, employees.company_code, companies.name, companies.fundation_year FROM employees INNER JOIN companies ON employees.company_code = companies.id AND employees.company_code = ?", uid).Scan(&company_employees).Error
+	err = conn.DB.Raw("SELECT employees.fullname, employees.age, employees.position, employees.company_code, companies.name, companies.fundation_year FROM employees INNER JOIN companies ON employees.company_code = companies.id AND employees.company_code = ?", id).Scan(&company_employees).Error
 	if err != nil {
 		c.SendStatus(fiber.StatusNotFound)
 	}
@@ -70,14 +73,14 @@ func AddOneEmployee(c *fiber.Ctx) error {
 
 func ModifyOneEmployee(c *fiber.Ctx) error {
 	c.Accepts("application/json")
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
-	uid := uint(id)
 
 	employee := models.Employee{}
-	err = conn.DB.Where("id = ?", uid).Find(&employee).Error
+	err = conn.DB.Where("id = ?", id).Find(&employee).Error
 	if err != nil {
 		c.SendStatus(fiber.StatusNotFound)
 	}
@@ -116,14 +119,14 @@ func ModifyOneEmployee(c *fiber.Ctx) error {
 
 func UpdateOneEmployee(c *fiber.Ctx) error {
 	c.Accepts("application/json")
+
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
-	uid := uint(id)
 
 	employee := models.Employee{}
-	err = conn.DB.Where("id = ?", uid).Find(&employee).Error
+	err = conn.DB.Where("id = ?", id).Find(&employee).Error
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}
@@ -158,8 +161,7 @@ func RemoveOneEmployee(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	uid := uint(id)
-	err = conn.DB.Table("employees").Where("id = ?", uid).Delete(&models.Employee{}).Error
+	err = conn.DB.Table("employees").Where("id = ?", id).Delete(&models.Employee{}).Error
 	if err != nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	}

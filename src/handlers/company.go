@@ -63,7 +63,6 @@ func ModifyOneCompany(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	uid := uint(id)
 	request := models.Company{}
 	err = c.BodyParser(&request)
 	if err != nil {
@@ -71,8 +70,7 @@ func ModifyOneCompany(c *fiber.Ctx) error {
 	}
 
 	company := models.Company{}
-	company.ID = uid
-	err = conn.DB.Where(company.ID).First(&company).Error
+	err = conn.DB.Where("id = ?", id).First(&company).Error
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
@@ -95,6 +93,7 @@ func ModifyOneCompany(c *fiber.Ctx) error {
 
 func UpdateOneCompany(c *fiber.Ctx) error {
 	c.Accepts("application/json")
+	
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return err
@@ -106,11 +105,9 @@ func UpdateOneCompany(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	uid := uint(id)
 	company := models.Company{}
-	company.ID = uid
 
-	err = conn.DB.Where(company.ID).First(&company).Error
+	err = conn.DB.Where("id = ?", id).First(&company).Error
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}

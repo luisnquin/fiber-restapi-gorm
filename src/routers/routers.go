@@ -12,7 +12,6 @@ func Init() *fiber.App {
 	v1 := api.Group("/v1")
 
 	company := v1.Group("/companies")
-
 	company.Get("", handlers.GetAllCompanies)
 	company.Get("/:id", handlers.GetOneCompany)
 	company.Post("", handlers.AddOneCompany)
