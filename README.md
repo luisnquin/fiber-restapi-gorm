@@ -1,7 +1,7 @@
 # API RESTful with Fiber and GORM
 
 ### Main endpoints
-#### Employees
+#### - Employees
 <h5>GET, POST:</h5>
 
 ```http://127.0.0.1:8000/api/v1/employees```<br>
@@ -14,7 +14,7 @@
 
 ```http://127.0.0.1:8000/api/v1/employees/:id```<br>
 
-### Companies
+#### - Companies
 
 <h5>GET, POST:</h5>
 
