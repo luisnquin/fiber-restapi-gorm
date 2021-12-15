@@ -88,23 +88,28 @@ func ModifyOneEmployee(c *fiber.Ctx) error {
 		c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	if request.Fullname != "" {
+	switch {
+	case request.Fullname != "":
 		employee.Fullname = request.Fullname
+		conn.DB.Save(&employee)
 		return c.SendStatus(fiber.StatusAccepted)
 
-	} else if request.Age != 0 {
+	case request.Age != 0:
 		employee.Age = request.Age
+		conn.DB.Save(&employee)
 		return c.SendStatus(fiber.StatusAccepted)
 
-	} else if request.Position != "" {
+	case request.Position != "":
 		employee.Position = request.Position
+		conn.DB.Save(&employee)
 		return c.SendStatus(fiber.StatusAccepted)
 
-	} else if request.CompanyCode != 0 {
+	case request.CompanyCode != 0:
 		employee.CompanyCode = request.CompanyCode
+		conn.DB.Save(&employee)
 		return c.SendStatus(fiber.StatusAccepted)
 
-	} else {
+	default:
 		return c.SendStatus(fiber.StatusNotModified)
 	}
 }

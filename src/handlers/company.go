@@ -72,28 +72,23 @@ func ModifyOneCompany(c *fiber.Ctx) error {
 
 	company := models.Company{}
 	company.ID = uid
+	err = conn.DB.Where(company.ID).First(&company).Error
+	if err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
 
-	if request.Name != "" {
-		err = conn.DB.Where(company.ID).First(&company).Error
-		if err != nil {
-			return c.SendStatus(fiber.StatusBadRequest)
-		}
-
+	switch {
+	case request.Name != "":
 		company.Name = request.Name
 		conn.DB.Save(&company)
-
 		return c.SendStatus(fiber.StatusAccepted)
 
-	} else if request.FundationYear != 0 {
-		err := conn.DB.Where(company.ID).First(&company).Error
-		if err != nil {
-			return c.SendStatus(fiber.StatusBadRequest)
-		}
+	case request.FundationYear != 0:
 		company.FundationYear = request.FundationYear
 		conn.DB.Save(&company)
-
 		return c.SendStatus(fiber.StatusAccepted)
-	} else {
+		
+	default:
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 }
