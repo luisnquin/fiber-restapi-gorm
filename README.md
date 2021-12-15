@@ -1,4 +1,4 @@
-# API RESTful with Fiber and GORM
+# API REST with Fiber and GORM
 
 ### Main endpoints
 #### - Employees
